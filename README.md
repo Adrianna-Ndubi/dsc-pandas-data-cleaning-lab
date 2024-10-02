@@ -99,7 +99,8 @@ In the cell below, load `heroes_information.csv` as `heroes_df`:
 
 
 ```python
-# Your code here
+heroes_df = pd.read_csv('heroes_information.csv')
+powers_df = pd.read_csv('super_hero_powers.csv', index_col=0)
 
 heroes_df.head()
 ```
@@ -113,7 +114,7 @@ There are two ways to do this:
 
 
 ```python
-# Your code here
+heroes_df = pd.read_csv('heroes_information.csv', index_col=0)
 
 heroes_df.head()
 ```
@@ -157,7 +158,7 @@ In the cell below, inspect the overall shape of the dataframe:
 
 
 ```python
-# Your code here
+print(heroes_df.shape)
 ```
 
 Now let's look at the info printout:
@@ -165,7 +166,7 @@ Now let's look at the info printout:
 
 ```python
 # Run this cell without changes
-heroes_df.info()
+
 ```
 
 In the cell below, interpret that information. Do the data types line up with what we expect? Are there any missing values?
@@ -174,7 +175,7 @@ In the cell below, interpret that information. Do the data types line up with wh
 ```python
 # Replace None with appropriate text
 """
-None
+heroes_df.info()
 """
 ```
 
@@ -184,7 +185,8 @@ Now, repeat the same process with `super_hero_powers.csv`. Name the dataframe `p
 
 
 ```python
-# Your code here (create more cells as needed)
+powers_df.shape
+powers_df.info()
 ```
 
 The following code will check if it was loaded correctly:
@@ -250,7 +252,11 @@ Write your answer below, and explain how it relates to the information we have:
 ```python
 # Replace None with appropriate text
 """
-None
+# Check for missing values in Publisher column
+heroes_df['Publisher'].isna().sum()
+
+# Sample records with missing Publisher values
+heroes_df[heroes_df['Publisher'].isna()].sample(5)
 """
 ```
 
@@ -258,7 +264,12 @@ Now, implement the strategy to drop rows with missing values using code. (You ca
 
 
 ```python
-# Your code here
+# Drop rows with missing Publisher values
+heroes_df = heroes_df.dropna(subset=['Publisher'])
+
+# Verify that there are no missing Publisher values
+heroes_df['Publisher'].isna().sum()
+
 ```
 
 Now there should be no missing values in the publisher column:
@@ -297,7 +308,9 @@ Now, write some code to handle these cases. If you're not sure where to start, l
 
 
 ```python
-# Your code here
+# Clean up publisher names (strip whitespace, handle case issues)
+heroes_df['Publisher'] = heroes_df['Publisher'].str.strip()
+
 ```
 
 Check your work below:
@@ -336,6 +349,7 @@ ax1.set_ylabel("Count of Superheroes")
 ax2.set_ylabel("Count of Superheroes")
 ax1.set_title("Distribution of Superheroes by Publisher")
 ax2.set_title("Top 5 Publishers by Count of Superheroes");
+plt.show()
 ```
 
 ## 3. Perform Data Aggregation and Cleaning Required to Answer Second Question
@@ -366,7 +380,11 @@ In the cell below, identify the shared key, and your strategy for joining the da
 ```python
 # Replace None with appropriate text
 """
-None
+# Join heroes_df and powers_df
+heroes_and_powers_df = heroes_df.set_index('name').join(powers_df.T)
+
+# Check the joined dataframe
+heroes_and_powers_df.head()
 """
 ```
 
@@ -632,7 +650,15 @@ Explain your question below:
 ```python
 # Replace None with appropriate text:
 """
-None
+# Calculate the correlation matrix for powers
+powers_correlation = powers_df.T.corr()
+
+# Plot a heatmap of the correlation matrix
+plt.figure(figsize=(16, 12))
+sns.heatmap(powers_correlation, cmap='coolwarm', vmin=-1, vmax=1)
+plt.title('Correlation Between Superpowers')
+plt.show()
+
 """
 ```
 
